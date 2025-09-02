@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 import SuitsPage from "./components/SuitsPage";
 import PantsPage from "./components/PantsPage";
+import GLBViewer from "./components/GLBViewer";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -96,7 +97,7 @@ function App() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                      d="M3 7v10a2 2 0 002-2H5a2 2 0 00-2-2z"
                     />
                   </svg>
                 </div>
@@ -130,6 +131,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/suits" element={<SuitsPage />} />
           <Route path="/pants" element={<PantsPage />} />
+          <Route path="/glb-viewer" element={<GLBViewer />} />
         </Routes>
       </div>
     </div>

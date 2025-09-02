@@ -1,5 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF, Environment } from "@react-three/drei";
+
+function SuitModel() {
+  const { scene } = useGLTF("/data/base_suit/suit.glb");
+
+  // Clone the scene and apply transformations
+  const clonedScene = scene.clone();
+  clonedScene.scale.setScalar(1.5);
+  clonedScene.position.set(0, 0, 0);
+
+  return <primitive object={clonedScene} />;
+}
 
 function SuitsPage() {
   const navigate = useNavigate();
@@ -99,10 +112,65 @@ function SuitsPage() {
         >
           <div className="flex gap-8 h-full">
             {/* Left Pane - 3D Model */}
-            <div className="flex-1 bg-white rounded-lg p-6 flex items-center justify-center">
-              <span className="text-2xl font-semibold text-gray-700">
-                3D Model
-              </span>
+            <div className="flex-1 bg-white rounded-lg p-6">
+              <Canvas
+                camera={{ position: [0, 0, 6], fov: 45 }}
+                style={{ height: "100%", width: "100%", background: "#bdb7b7" }}
+                gl={{ antialias: true }}
+              >
+                <Suspense fallback={null}>
+                  {/* Enhanced Lighting Setup */}
+                  {/* Main ambient light for overall illumination */}
+                  <ambientLight intensity={0.3} color="#ffffff" />
+
+                  {/* Key light - main directional light for primary shadows */}
+                  <directionalLight
+                    position={[5, 10, 5]}
+                    intensity={1.2}
+                    color="#ffffff"
+                    castShadow
+                    shadow-mapSize-width={2048}
+                    shadow-mapSize-height={2048}
+                  />
+
+                  {/* Fill light - softer light from opposite side */}
+                  <directionalLight
+                    position={[-5, 8, -5]}
+                    intensity={0.6}
+                    color="#f0f8ff"
+                  />
+
+                  {/* Rim light - backlight for edge definition */}
+                  <directionalLight
+                    position={[0, 5, -8]}
+                    intensity={0.8}
+                    color="#ffffff"
+                  />
+
+                  {/* Bottom fill light for under-shadow areas */}
+                  <directionalLight
+                    position={[0, -5, 0]}
+                    intensity={0.3}
+                    color="#ffffff"
+                  />
+
+                  {/* Environment for realistic reflections */}
+                  <Environment preset="studio" />
+
+                  {/* 3D Model */}
+                  <SuitModel />
+
+                  {/* Camera Controls */}
+                  <OrbitControls
+                    enablePan={true}
+                    enableZoom={true}
+                    enableRotate={true}
+                    autoRotate={false}
+                    maxDistance={10}
+                    minDistance={1}
+                  />
+                </Suspense>
+              </Canvas>
             </div>
 
             {/* Right Pane - Style Options */}
@@ -171,16 +239,14 @@ function SuitsPage() {
                   Options
                 </h3>
                 <div className="flex gap-3 overflow-x-auto">
-                  {
-                    styleOptions[selectedStyle].map((option,index)=>(
-                        <div
-                        key={index}
-                        className={`w-16 h-16 ${option.color} rounded-lg border-2 ${option.borderColor} flex-shrink-0 flex items-center justify-center text-xs text-center font-medium p-1`}
-                      >
-                        {option.name}
-                      </div>
-                    ))
-                  }
+                  {styleOptions[selectedStyle].map((option, index) => (
+                    <div
+                      key={index}
+                      className={`w-16 h-16 ${option.color} rounded-lg border-2 ${option.borderColor} flex-shrink-0 flex items-center justify-center text-xs text-center font-medium p-1`}
+                    >
+                      {option.name}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
