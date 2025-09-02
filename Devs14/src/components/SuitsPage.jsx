@@ -172,14 +172,14 @@ function SuitsPage() {
                 </h3>
                 <div className="flex gap-3 overflow-x-auto">
                   {
-                    styleOptions[selectedStyle].map((option,index)=>{
+                    styleOptions[selectedStyle].map((option,index)=>(
                         <div
                         key={index}
                         className={`w-16 h-16 ${option.color} rounded-lg border-2 ${option.borderColor} flex-shrink-0 flex items-center justify-center text-xs text-center font-medium p-1`}
                       >
                         {option.name}
                       </div>
-                    })
+                    ))
                   }
                 </div>
               </div>
